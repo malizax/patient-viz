@@ -271,7 +271,7 @@ pip_install() {
       echo "integrity of ${PIP_INSTALL_FILE} and enter your password for super-user rights."
       echo "This script will exit afterwards for security reasons and"
       echo "you need to re-run it in order to proceed."
-      sudo ./get-pip.py
+      sudo python ./get-pip.py
       test_fail $?
       rm -r -- "${PIP_INSTALL_FILE}" 2> /dev/null
       test_fail $?
@@ -516,7 +516,7 @@ convert_patients() {
 
   if [ -z "${convert_list}" ]; then
     echo "find top ${convert_top_n} patients"
-    ids=`./cms_analyze.py -m -f "${format}" -- ${CMS_DIR} | tail -n ${convert_top_n}`
+    ids=`python ./cms_analyze.py -m -f "${format}" -- ${CMS_DIR} | tail -n ${convert_top_n}`
   else
     ids="${convert_list}"
   fi
@@ -525,12 +525,12 @@ convert_patients() {
     echo "create ${file}"
     echo "config file is ${config}"
     echo "script output can be found in ${err_file} and ${err_dict_file}"
-    ./cms_get_patient.py -p "${id}" -f "${format}" -o "${file}" -- "${CMS_DIR}" 2> $err_file || {
+    python ./cms_get_patient.py -p "${id}" -f "${format}" -o "${file}" -- "${CMS_DIR}" 2> $err_file || {
       echo "failed during patient conversion"
       cd_back
       exit 6
     }
-    ./build_dictionary.py -p "${file}" -c "${config}" -o "${dictionary}" 2> $err_dict_file || {
+    python ./build_dictionary.py -p "${file}" -c "${config}" -o "${dictionary}" 2> $err_dict_file || {
       echo "failed during dictionary creation"
       cd_back
       exit 7
